@@ -61,3 +61,36 @@ using var contexto = new ExemploContext();
 
 contexto.Database.EnsureDeleted();
 ```
+
+#### Como exeutar comandos SQL no banco de dados com Entity Framework Core
+```
+using var contexto = new ExemploContext();
+
+var ativo = true;
+
+var codFunc = 1;
+
+// 1º Opção
+contexto.Database.ExecuteSqlRaw("update Funcionarios set ativo = {0} where codFunc = {1}", ativo, codFunc);
+
+// 2º Opção
+contexto.Database.ExecuteSqlInterpolated($"update Funcionarios set ativo = {ativo} where codFunc = {codFunc}");
+
+// 3º Opção
+using (var cmd = contexto.Database.GetDbConnection().CreateCommand())
+{
+    cmd.CommandText = "update Funcionarios set ativo = @ativo where codFunc = @codFunc";
+
+    var parametroAtivo = cmd.CreateParameter();
+    parametroAtivo.ParameterName = "@ativo";
+    parametroAtivo.Value = ativo;
+    cmd.Parameters.Add(parametroAtivo);
+
+    var parametroCodFunc = cmd.CreateParameter();
+    parametroCodFunc.ParameterName = "@codFunc";
+    parametroCodFunc.Value = codFunc;
+    cmd.Parameters.Add(parametroCodFunc);
+
+    cmd.ExecuteNonQuery();
+}
+```
