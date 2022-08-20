@@ -13,3 +13,9 @@ var scriptSql = contexto.Database.GenerateCreateScript();
 
 Console.WriteLine(scriptSql);
 ```
+### Como obter migrações aplicadas no banco de dados?
+```
+using var contexto = new ExemploContext();
+
+var migracoes = contexto.Database.GetAppliedMigrations();
+```
