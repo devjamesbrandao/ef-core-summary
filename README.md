@@ -39,3 +39,25 @@ using var contexto = new ExemploContext();
 
 var migracoesPendentes = contexto.Database.GetPendingMigrations();
 ```
+
+#### Como verificar se é possível a aplicação conectar-se ao banco de dados?
+```
+using var contexto = new ExemploContext();
+
+// Retorna um booleano
+bool podeConectar = contexto.Database.CanConnect();
+```
+
+#### Como garantir que o banco de dados seja criado durante a inicialização da aplicação?
+```
+using var contexto = new ExemploContext();
+
+contexto.Database.EnsureCreated();
+```
+
+#### Como garantir que o banco de dados seja deletado durante a inicialização da aplicação?
+```
+using var contexto = new ExemploContext();
+
+contexto.Database.EnsureDeleted();
+```
