@@ -1,4 +1,15 @@
 ### Estudos sobre Entity Framework Core
 
-- <p> Como limpar remover objetos trackeados na memória do Entity Framework Core?</p>
-> `contexto.ChangeTracker.Clear();`
+#### Como limpar/remover objetos trackeados na memória do Entity Framework Core?
+```
+contexto.ChangeTracker.Clear();
+```
+
+#### Como gerar script do banco de dados ?
+```
+using var contexto = new ExemploContext();
+
+var scriptSql = contexto.Database.GenerateCreateScript();
+
+Console.WriteLine(scriptSql);
+```
