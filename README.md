@@ -94,3 +94,19 @@ using (var cmd = contexto.Database.GetDbConnection().CreateCommand())
     cmd.ExecuteNonQuery();
 }
 ```
+
+#### Como criar Stored Procedure com o EF Core?
+```
+var criarProcedureBuscaProdutosPorId = @"
+    CREATE OR ALTER PROCEDURE ObterProdutosPorId
+        @Id int
+    AS
+    BEGIN
+        SELECT * FROM Produtos Where Id = @Id
+    END";
+
+using var contexto = new ProdutoContext();
+
+contexto.Database.ExecuteSqlRaw(criarProcedureBuscaProdutosPorId);
+```
+
