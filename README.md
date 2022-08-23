@@ -119,6 +119,24 @@ var produtos = contexto.Produtos
     .FromSqlInterpolated($"EXECUTE ObterProdutosPorId {idProduto}")
     .ToList();
 ```
+#### Como criar Stored Procedure para inserir dados com o EF Core?
+```
+var criarProdutoComStoredProcedure = @"
+    CREATE OR ALTER PROCEDURE CriarProduto
+        @Descricao VARCHAR(50),
+        @Ativo bit,
+        @Preco decimal(10, 2),
+        @Id int
+    AS
+    BEGIN
+        INSERT INTO 
+            Produtos(Descricao, Ativo, Preco, Id) 
+        VALUES (@Descricao, @Ativo, @Preco, @Id)
+    END ";
 
+using var contexto = new ProdutoContext();
+
+contexto.Database.ExecuteSqlRaw(criarProdutoComStoredProcedure);
+```
 
 
