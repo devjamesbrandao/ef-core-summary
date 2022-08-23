@@ -7,6 +7,7 @@ contexto.ChangeTracker.Clear();
 
 #### Como gerar script do banco de dados ?
 ```
+// ExemploContext utilizado nesse e nos próximos exemplos pode ser encontrado na pasta 'Data'
 using var contexto = new ExemploContext();
 
 var scriptSql = contexto.Database.GenerateCreateScript();
@@ -105,6 +106,7 @@ var criarProcedureBuscaProdutosPorId = @"
         SELECT * FROM Produtos Where Id = @Id
     END";
 
+// ProdutoContext utilizado nesse e nos próximos exemplos pode ser encontrado na pasta 'Data'
 using var contexto = new ProdutoContext();
 
 contexto.Database.ExecuteSqlRaw(criarProcedureBuscaProdutosPorId);
