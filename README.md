@@ -109,4 +109,16 @@ using var contexto = new ProdutoContext();
 
 contexto.Database.ExecuteSqlRaw(criarProcedureBuscaProdutosPorId);
 ```
+#### Como realizar consulta utilizando Stored Procedure com Entity Framework Core?
+```
+using var contexto = new ProdutoContext();
+
+var idProduto = new SqlParameter("@Id", 1);
+
+var produtos = contexto.Produtos
+    .FromSqlInterpolated($"EXECUTE ObterProdutosPorId {idProduto}")
+    .ToList();
+```
+
+
 
