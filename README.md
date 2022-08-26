@@ -213,4 +213,16 @@ var produtos = await contexto.Produtos.FromSqlInterpolated($"SELECT * FROM Produ
                                       .FirstOrDefaultAsync();
 ```
 
+#### Como realizar consultas no banco de dados utilizando querys parametrizadas SQL no EF Core?
+```
+using var contexto = new ProdutoContext();
 
+var id = new SqlParameter
+{
+    Value = 1,
+    SqlDbType = System.Data.SqlDbType.Int
+};
+
+var produtos = await contexto.Produtos.FromSqlRaw("SELECT * FROM Produtos WHERE Id = {0}", id)
+                                      .FirstOrDefaultAsync();
+```
