@@ -96,7 +96,7 @@ using (var cmd = contexto.Database.GetDbConnection().CreateCommand())
 }
 ```
 
-### Como criar filtros globais para consultas realizadas no banco de dados utilizando LINQ?
+#### Como criar filtros globais para consultas realizadas no banco de dados utilizando LINQ?
 ```
 // Nós configuramos o filtro global no DbContext da nossa aplicação
 public class ProdutoContext : DbContext
@@ -128,7 +128,7 @@ var produtos = contexto.Produtos.AsNoTracking().ToListAsync();
 // (modelBuilder.Entity<Produto>().HasQueryFilter(p => p.Ativo == true)).
 ```
 
-### Como ignorar filtros globais para consultas realizadas no banco de dados utilizando LINQ?
+#### Como ignorar filtros globais para consultas realizadas no banco de dados utilizando LINQ?
 ```
 using var contexto = new ProdutoContext();
 
@@ -181,4 +181,9 @@ using var contexto = new ProdutoContext();
 contexto.Database.ExecuteSqlRaw(criarProdutoComStoredProcedure);
 ```
 
+#### Como inserir dados utilizando Stored Procedure com o EF Core?
+```
+using var contexto = new ProdutoContext();
 
+contexto.Database.ExecuteSqlRaw("execute CriarProduto @p0, @p1, @p2, @p3", "Camisa do SHREK", true, 50, 1);
+```
