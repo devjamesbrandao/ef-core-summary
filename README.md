@@ -203,3 +203,14 @@ var produtos = db.Produtos
                  .ToListAsync();
 ```
 
+#### Como realizar consultas no banco de dados utilizando querys interpoladas SQL no EF Core?
+```
+using var contexto = new ProdutoContext();
+
+var id = 1;
+
+var produtos = await contexto.Produtos.FromSqlInterpolated($"SELECT * FROM Produtos WHERE Id = {id}")
+                                      .FirstOrDefaultAsync();
+```
+
+
