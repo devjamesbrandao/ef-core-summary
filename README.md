@@ -120,7 +120,9 @@ public class ProdutoContext : DbContext
 using var contexto = new ProdutoContext();
 
 // Exemplo de query
-var produtos = contexto.Produtos.AsNoTracking().ToListAsync();
+var produtos = await contexto.Produtos
+                             .AsNoTracking()
+                             .ToListAsync();
 
 // Como resultado da consulta acima, teremos uma query similar a 'SELECT [p].[Id], [p].[Descricao], [p].[Ativo], [p].[Preco] 
 // FROM [Produtos] AS [p] WHERE [p].[Ativo] = true'. Embora nós não tenhamos adicionado nenhum filtro na consulta acima 
@@ -133,7 +135,10 @@ var produtos = contexto.Produtos.AsNoTracking().ToListAsync();
 using var contexto = new ProdutoContext();
 
 // Nesse caso, o filtro global será ignorado
-var produtos = contexto.Produtos.AsNoTracking().IgnoreQueryFilters().ToListAsync();
+var produtos = await contexto.Produtos
+                             .AsNoTracking()
+                             .IgnoreQueryFilters()
+                             .ToListAsync();
 ```
 
 #### Como criar Stored Procedure para buscar dados com o EF Core?
@@ -157,9 +162,9 @@ using var contexto = new ProdutoContext();
 
 var idProduto = new SqlParameter("@Id", 1);
 
-var produtos = contexto.Produtos
-    .FromSqlInterpolated($"EXECUTE ObterProdutosPorId {idProduto}")
-    .ToList();
+var produtos = await contexto.Produtos
+                             .FromSqlInterpolated($"EXECUTE ObterProdutosPorId {idProduto}")
+                             .ToListAsync();
 ```
 #### Como criar Stored Procedure para inserir dados com o EF Core?
 ```
@@ -187,3 +192,14 @@ using var contexto = new ProdutoContext();
 
 contexto.Database.ExecuteSqlRaw("execute CriarProduto @p0, @p1, @p2, @p3", "Camisa do SHREK", true, 50, 1);
 ```
+
+#### Como realizar consultas no banco de dados com comentários utilizando EF Core?
+```
+using var contexto = new ProdutoContext();
+
+var produtos = db.Produtos
+                 .AsNoTracking()
+                 .TagWith(@"Adicionando comentário na consulta")
+                 .ToListAsync();
+```
+
