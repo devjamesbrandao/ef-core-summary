@@ -96,7 +96,7 @@ using (var cmd = contexto.Database.GetDbConnection().CreateCommand())
 }
 ```
 
-### Como criar filtros globais consultas realizadas no banco de dados utilizando LINQ?
+### Como criar filtros globais para consultas realizadas no banco de dados utilizando LINQ?
 ```
 // Nós configuramos o filtro global no DbContext da nossa aplicação
 public class ProdutoContext : DbContext
@@ -117,7 +117,7 @@ public class ProdutoContext : DbContext
     }
 }
 
-using var contexto = new ExemploContext();
+using var contexto = new ProdutoContext();
 
 // Exemplo de query
 var produtos = contexto.Produtos.AsNoTracking().ToListAsync();
@@ -126,7 +126,14 @@ var produtos = contexto.Produtos.AsNoTracking().ToListAsync();
 // FROM [Produtos] AS [p] WHERE [p].[Ativo] = true'. Embora nós não tenhamos adicionado nenhum filtro na consulta acima 
 // utilizando LINQ, o filtro global adicionou um filtro de forma automática, pois configuramos isso no DbContext 
 // (modelBuilder.Entity<Produto>().HasQueryFilter(p => p.Ativo == true)).
+```
 
+### Como ignorar filtros globais para consultas realizadas no banco de dados utilizando LINQ?
+```
+using var contexto = new ProdutoContext();
+
+// Nesse caso, o filtro global será ignorado
+var produtos = contexto.Produtos.AsNoTracking().IgnoreQueryFilters().ToListAsync();
 ```
 
 #### Como criar Stored Procedure para buscar dados com o EF Core?
