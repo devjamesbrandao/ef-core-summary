@@ -96,6 +96,39 @@ using (var cmd = contexto.Database.GetDbConnection().CreateCommand())
 }
 ```
 
+### Como criar filtros globais consultas realizadas no banco de dados utilizando LINQ?
+```
+// Nós configuramos o filtro global no DbContext da nossa aplicação
+public class ProdutoContext : DbContext
+{
+    public DbSet<Produto> Produtos { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer("CONNECTION_STRING");
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // Aqui configuramos o filtro global
+        // Nesse caso, toda vez que realizarmos uma query no banco de dados na tabela de produtos utilizando o LINQ do 
+        // Entity Framework Core, será adicionado um filtro para trazer somente os produtos os quais o campo ativo 
+        // seja igual a 'true' modelBuilder.Entity<Produto>().HasQueryFilter(p => p.Ativo == true);
+    }
+}
+
+using var contexto = new ExemploContext();
+
+// Exemplo de query
+var produtos = contexto.Produtos.AsNoTracking().ToListAsync();
+
+// Como resultado da consulta acima, teremos uma query similar a 'SELECT [p].[Id], [p].[Descricao], [p].[Ativo], [p].[Preco] 
+// FROM [Produtos] AS [p] WHERE [p].[Ativo] = true'. Embora nós não tenhamos adicionado nenhum filtro na consulta acima 
+// utilizando LINQ, o filtro global adicionou um filtro de forma automática, pois configuramos isso no DbContext 
+// (modelBuilder.Entity<Produto>().HasQueryFilter(p => p.Ativo == true)).
+
+```
+
 #### Como criar Stored Procedure para buscar dados com o EF Core?
 ```
 var criarProcedureBuscaProdutosPorId = @"
