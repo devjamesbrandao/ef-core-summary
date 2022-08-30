@@ -113,7 +113,8 @@ public class ProdutoContext : DbContext
         // Aqui configuramos o filtro global
         // Nesse caso, toda vez que realizarmos uma query no banco de dados na tabela de produtos utilizando o LINQ do 
         // Entity Framework Core, será adicionado um filtro para trazer somente os produtos os quais o campo ativo 
-        // seja igual a 'true' modelBuilder.Entity<Produto>().HasQueryFilter(p => p.Ativo == true);
+        // seja igual a 'true' 
+        modelBuilder.Entity<Produto>().HasQueryFilter(p => p.Ativo == true);
     }
 }
 
@@ -226,3 +227,32 @@ var id = new SqlParameter
 var produtos = await contexto.Produtos.FromSqlRaw("SELECT * FROM Produtos WHERE Id = {0}", id)
                                       .FirstOrDefaultAsync();
 ```
+
+#### Como exibir logs das operações realizadas no banco de dados com EF Core no Console da aplicação? Exibir dados sensíveis no console da aplicação? Habilitar tentativa de reconectar no banco de dados em caso de erro? Habilitar TimeOut global das operações realizadas no banco de dados?
+```
+public class ProdutoContext : DbContext
+{
+    public DbSet<Produto> Produtos { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        // LogTo: realiza os logs do EF Core
+        // Console.WriteLine: local onde os dados serão logados
+        // LogLevel.Information: nível dos logs que serão gravados. Pode ser Debug, Warning, Information, etc
+        optionsBuilder
+                      .UseSqlServer(
+                            connectionString: "CONNECTION_STRING", // Conexão como banco de dados
+                            sqlServerOptionsAction: x => x.CommandTimeout(20) // Habilitat TimeOut Global para as operações realizadas no banco de dados em segundos
+                                                          .EnableRetryOnFailure( // Habilita configuração para tentar reconectar no banco de dados caso haja erro de                                                                                    // conexão
+                                                            2, // Número de tentativas para tentar reconectar
+                                                            TimeSpan.FromSeconds(15), // Tempo de espera entre uma tentativa e outra
+                                                            null // lista de erros se quiser gravar
+                                                         )
+                      )
+                      .LogTo(Console.WriteLine, LogLevel.Information)
+                      .EnableSensitiveDataLogging() // Habilitar exibição de dados sensíveis no console da aplicação
+        ;
+    }
+}
+```
+
