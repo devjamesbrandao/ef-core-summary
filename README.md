@@ -255,4 +255,12 @@ public class ProdutoContext : DbContext
     }
 }
 ```
+#### Como não rastrear entidades ao realizar consultas no banco de dados com EF Core?
+> Utilizar a cláusula <strong>.AsNoTracking()</strong>. Exemplo:
+```
+using var contexto = new ProdutoContext();
+
+var produtos = contexto.Produtos.AsNoTracking().ToList();
+```
+
 
